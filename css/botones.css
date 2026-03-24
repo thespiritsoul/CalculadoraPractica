@@ -7,8 +7,13 @@
 
 .boton{
     background-color: rgb(226, 43, 165);
+    border: rgb(125, 4, 4);
     min-height: 30px;
     font-size: 20px;
+}
+.boton:active{
+    background-color: rgba(156, 31, 115, 0.553);
+    
 }
 
 .uno,.dos,.tres,.cuatro,.cinco

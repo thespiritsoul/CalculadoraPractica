@@ -50,3 +50,70 @@ body{
 .display::-webkit-scrollbar-thumb:hover {
     background: #e62db1;          /* Color al pasar el mouse */
 }
+
+.historial{
+    display: flex;
+    padding: 5px;
+    justify-content: space-between;
+}
+
+.tituloHistorial{
+    background-color: rgba(199, 118, 48, 0.718);
+    border-radius: 5px;
+    padding: 3px;
+    font-size: 20px;
+    align-self: center;
+}
+
+.containerHistorial{
+    height: 70px;
+    width: 144px;
+
+    background-color: rgba(192, 65, 255, 0.4);
+
+    margin: 0;
+    display: flex;
+    flex-direction:column-reverse;
+    gap: 10px;
+
+    overflow-x:hidden;
+    overflow-y: scroll;
+}
+
+.containerHistorial::-webkit-scrollbar {
+    width: 8px;               /* Altura de la barra horizontal */
+}
+.containerHistorial::-webkit-scrollbar-track {
+    background: #2b0031ac;       /* Color de fondo */
+}
+.containerHistorial::-webkit-scrollbar-thumb {
+    background: #b60985;          /* Color del "pulgar" */
+    border-radius: 4px;
+}
+.containerHistorial::-webkit-scrollbar-thumb:hover {
+    background: #e62db1;          /* Color al pasar el mouse */
+}
+
+
+
+
+
+li{
+    /* background-color: rgba(255, 65, 65, 0.80); */
+    padding: 1px;
+    border: 1px solid violet;
+    list-style: none;
+    display: flex;
+    margin: 0;
+    flex-direction: column;
+    gap: 1px;
+}
+
+div.display{
+    width: 130px;
+    font-size: 15px;
+    padding: 1px;
+}
+div.display::-webkit-scrollbar {
+    height: 5px;               /* Altura de la barra horizontal */
+}
