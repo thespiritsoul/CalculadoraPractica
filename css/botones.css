@@ -1,0 +1,28 @@
+.botones{
+    display: grid;
+    grid-template-columns:1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap:5px;
+}
+
+.boton{
+    background-color: rgb(226, 43, 165);
+    min-height: 30px;
+    font-size: 20px;
+}
+
+.uno,.dos,.tres,.cuatro,.cinco
+,.seis,.siete,.ocho,.nueve,.cero
+,.ans,.p{
+    border-radius: 50%;
+    background-color: orange;
+}
+
+.suma{
+    grid-row: 4/6;
+    grid-column: 4;
+}
+
+.igual{
+    grid-column: 4/6;
+}

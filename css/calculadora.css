@@ -1,0 +1,52 @@
+html{
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    box-sizing: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+    min-height: 100vh;
+    background:linear-gradient( to top,
+    rgb(251, 181, 50), rgb(226, 64, 172));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.calculadora{
+    display: flex;
+    flex-direction: column;
+    gap:15px;
+    min-width: 290px;
+    /* min-width: 590px; PUEDE SERPARA PANTALLAS GRANDES*/
+    /* min-height: 500px; */
+    background-color: rgba(173, 39, 39, 0.919);
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 50px;
+}
+
+.display{
+    font-size: 30px;
+    overflow-x: auto;
+    
+    width: 290px;
+    padding: 15px 5px;
+    background-color: rgb(167, 86, 201);
+}
+
+.display::-webkit-scrollbar {
+    height: 8px;               /* Altura de la barra horizontal */
+}
+.display::-webkit-scrollbar-track {
+    background: #2b0031ac;       /* Color de fondo */
+}
+.display::-webkit-scrollbar-thumb {
+    background: #b60985;          /* Color del "pulgar" */
+    border-radius: 4px;
+}
+.display::-webkit-scrollbar-thumb:hover {
+    background: #e62db1;          /* Color al pasar el mouse */
+}
