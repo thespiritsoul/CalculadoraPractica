@@ -4,7 +4,7 @@ const DISPLAY = document.getElementById("displayPrincipal")
 
 let resultado = 0
 let posicion = 0
-
+let ANStext = ""
 function botonClick(caracter) {
     let elemento;
     switch (caracter) {
@@ -53,8 +53,13 @@ function botonClick(caracter) {
         case 'CE':
             eliminarElemeto()
             break;
-        case 'Clear':   break;
-        case '=':       break;
+        case 'Clear':
+            DISPLAY.innerHTML = ""
+            posicion = 0
+            break;
+        case '=':
+            mostrarResultado()
+            break;
         default:        break;
     }
 
@@ -87,6 +92,7 @@ function eliminarElemeto() {
         posicion -= 1
     }
     console.log(posicion);
+    /**aqui retorno directo al display */
     DISPLAY.innerHTML = invertirCadena(operando)+cadRes
 }
 
@@ -96,4 +102,37 @@ function invertirCadena(cadena){
         x = cadena.substring(i,i+1) + x
     }
     return x
+}
+
+`{[(1)]}`
+
+function mostrarResultado() {
+    if (DISPLAY.innerHTML == "") {
+        return
+    }
+
+    /*TODO: hay que agregar los casos de error aqui, para que ANS no guarde errores */
+
+    if(DISPLAY.innerHTML.search("ANS") != -1){
+        DISPLAY.innerHTML = DISPLAY.innerHTML.replaceAll("ANS",ANStext)
+    }
+
+    /**TODO: este deberia cambiar, debe operar para el resultado
+     * De momento el resultado sera el mismo contenido de DISPLAY
+     */
+    resultado = DISPLAY.innerHTML
+    ANStext = resultado
+    guardarHistorial(DISPLAY.innerHTML,resultado)
+    DISPLAY.innerHTML = resultado
+    console.log("    "+DISPLAY.innerHTML.search("ANS") != -1);
+    
+}
+
+function guardarHistorial(operaciones, respuesta) {
+    const CONTENEDOR_HISTORIAL = document.getElementById("containerHistorial")
+    CONTENEDOR_HISTORIAL.innerHTML = CONTENEDOR_HISTORIAL.innerHTML +
+                `<li>
+                    <div class="display">${operaciones}</div>
+                    <div class="display">${respuesta}</div>
+                </li>`
 }

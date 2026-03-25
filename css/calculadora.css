@@ -31,6 +31,8 @@ body{
 .display{
     font-size: 30px;
     overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;/* glich con el signo -, al spamear -, el display partia el contenido hacia abajo */
     height: 45px;
     width: 290px;
     padding: 15px 5px;
