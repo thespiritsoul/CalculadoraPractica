@@ -1,12 +1,16 @@
 // import { botonClick } from "./botones.js";
 
 const DISPLAY = document.getElementById("displayPrincipal")
+const CURSOR = `<div class="cursor"></div>`
+const LEN_CURSOR = CURSOR.length
+
 
 let resultado = 0
 let posicion = 0
 let ANStext = 0
 function botonClick(caracter) {
-    let elemento;
+    var elemento;
+    var posi;
     switch (caracter) {
         case '1':       
         case '2':       
@@ -26,35 +30,39 @@ function botonClick(caracter) {
         case '/':       
         case '.':       
             elemento = caracter
-            posicion += 1
+            posi = 1
             break;
         case 'ANS':
             elemento = 'ANS'
-            posicion += 3
+            posi = 3
             break;   
         case 'pIzq':
             elemento = '('
-            posicion += 1
+            posi = 1
             break;
         case 'pDer':
             elemento = ')'
-            posicion += 1
+            posi = 1
             break;
         case 'cua':
             elemento = '&#178;&radic;'
-            posicion += 2
+            posi = 2
             break;
         case 'sqrt':
             elemento = '&radic;'
-            posicion += 1
+            posi = 1
             break;
-        case 'izq':     break;/** aun no  */
-        case 'der':     break;/** aun no  */
+        case 'izq':
+            moverCursor("izq")
+            break;
+        case 'der':
+            moverCursor("der")
+            break;
         case 'CE':
             eliminarElemeto()
             break;
         case 'Clear':
-            DISPLAY.innerHTML = ""
+            DISPLAY.innerHTML = CURSOR
             posicion = 0
             break;
         case '=':
@@ -67,20 +75,72 @@ function botonClick(caracter) {
         return
     }
     /*este es lo que muestra al display*/
-    DISPLAY.innerHTML = DISPLAY.innerHTML + elemento
-    console.log(DISPLAY.innerHTML);
-    console.log(posicion);
+    var contenido = contenidoDisplaySinCursor()
+    var n = contenido.length
+    var izq = contenido.substring(0,posicion)
+    var der = contenido.substring(posicion,n)
+    posicion += posi
+    DISPLAY.innerHTML = izq + elemento + CURSOR + der
+}
+/**
+ * modifica la posision, variable global
+ * modifica el texto de DISPLAY
+ */
+function moverCursor(dire) {
+    var contenido = contenidoDisplaySinCursor()
+    var n = contenido.length
+    var izq = invertirCadena(contenido.substring(0,posicion))
+    var der = contenido.substring(posicion,n)
+    var nuevaPosi;
+    console.log(`izq : ${invertirCadena(izq)}    der : ${der}`);
+    if(dire == "izq"){
+        if(izq == ""){
+            return
+        }
+        if( izq.search("SNA") == 0){
+            nuevaPosi = 3
+        }else if(izq.search("√²") == 0){
+            nuevaPosi = 2
+        }else{
+            nuevaPosi = 1
+        }
+        der = invertirCadena(izq.substring(0,nuevaPosi)) + der
+        izq = izq.substring(nuevaPosi,izq.length)
+    }else{
+        if(der == ""){
+            return
+        }
+        if( der.search("ANS") == 0){
+            nuevaPosi = 3
+        }else if(der.search("²√") == 0){
+            nuevaPosi = 2
+        }else{
+            nuevaPosi = 1
+        }
+        izq = invertirCadena(der.substring(0,nuevaPosi)) + izq
+        der = der.substring(nuevaPosi,der.length)
+    }
+    if (dire == "izq") {
+        posicion -= nuevaPosi
+    }else{
+        posicion += nuevaPosi
+    }
+    console.log(`${nuevaPosi}    ${posicion}`);
+    console.log(`izq : ${invertirCadena(izq)}    der : ${der}`);
     
+    DISPLAY.innerHTML = invertirCadena(izq) + CURSOR + der
 }
 
 function eliminarElemeto() {
-    if (DISPLAY.innerHTML == "") {
+    let contenido = contenidoDisplaySinCursor()
+    let n = contenido.length
+    let cadEli = contenido.substring(0,posicion)
+    let cadRes = contenido.substring(posicion,n)
+    let operando = invertirCadena(cadEli)
+
+    if (cadEli == "") {
         return
     }
-    let n = DISPLAY.innerHTML.length
-    let cadEli = DISPLAY.innerHTML.substring(0,posicion)
-    let cadRes = DISPLAY.innerHTML.substring(posicion,n)
-    let operando = invertirCadena(cadEli)
     if( operando.search("SNA") == 0){ 
         operando = operando.replace('SNA',"")
         posicion -= 3
@@ -91,9 +151,8 @@ function eliminarElemeto() {
         operando = operando.substring(1,n)
         posicion -= 1
     }
-    console.log(posicion);
     /**aqui retorno directo al display */
-    DISPLAY.innerHTML = invertirCadena(operando)+cadRes
+    DISPLAY.innerHTML = invertirCadena(operando)+CURSOR+cadRes
 }
 
 function invertirCadena(cadena){
@@ -107,26 +166,27 @@ function invertirCadena(cadena){
 `{[(1)]}`
 
 function mostrarResultado() {
-    if (DISPLAY.innerHTML == "") {
+    let contenido = contenidoDisplaySinCursor()
+    let n = contenido.length
+    if (contenido == "") {
         return
     }
 
     /*TODO: hay que agregar los casos de error aqui, para que ANS no guarde errores */
 
-    if(DISPLAY.innerHTML.search("ANS") != -1){
-        DISPLAY.innerHTML = DISPLAY.innerHTML.replaceAll("ANS",ANStext)
+    if(contenido.search("ANS") != -1){
+        contenido = contenido.replaceAll("ANS",ANStext)
     }
 
     /**TODO: este deberia cambiar, debe operar para el resultado
      * De momento el resultado sera el mismo contenido de DISPLAY
      */
-    let resultado = DISPLAY.innerHTML
+    let resultado = contenido
     ANStext = resultado
-    guardarHistorial(DISPLAY.innerHTML,resultado)
+    guardarHistorial(contenido,resultado)
     posicion = resultado.length
     // DISPLAY.innerHTML = resultado
-    console.log("    "+DISPLAY.innerHTML.search("ANS") != -1);
-    
+    DISPLAY.innerHTML = contenido + CURSOR
 }
 
 function guardarHistorial(operaciones, respuesta) {
@@ -135,5 +195,13 @@ function guardarHistorial(operaciones, respuesta) {
                 `<li>
                     <div class="display">${operaciones}</div>
                     <div class="display">${respuesta}</div>
-                </li>`
+                </li>
+                `
+    CONTENEDOR_HISTORIAL.scrollTop = CONTENEDOR_HISTORIAL.scrollHeight
+    
+}
+
+
+function contenidoDisplaySinCursor(){
+    return DISPLAY.innerHTML.replace(CURSOR,'')
 }
