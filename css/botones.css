@@ -6,9 +6,10 @@
 }
 
 .boton{
+    
     background-color: rgb(226, 43, 165);
-    border: rgb(125, 4, 4);
-    min-height: 30px;
+    border:1px solid rgb(24, 3, 3);
+    min-height: 40px;
     font-size: 20px;
 }
 .boton:active{

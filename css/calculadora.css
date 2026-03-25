@@ -31,7 +31,7 @@ body{
 .display{
     font-size: 30px;
     overflow-x: auto;
-    
+    height: 45px;
     width: 290px;
     padding: 15px 5px;
     background-color: rgb(167, 86, 201);
@@ -110,6 +110,7 @@ li{
 }
 
 div.display{
+    height: 22px;
     width: 130px;
     font-size: 15px;
     padding: 1px;
