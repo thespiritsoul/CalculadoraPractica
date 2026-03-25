@@ -4,7 +4,7 @@ const DISPLAY = document.getElementById("displayPrincipal")
 
 let resultado = 0
 let posicion = 0
-let ANStext = ""
+let ANStext = 0
 function botonClick(caracter) {
     let elemento;
     switch (caracter) {
@@ -120,10 +120,11 @@ function mostrarResultado() {
     /**TODO: este deberia cambiar, debe operar para el resultado
      * De momento el resultado sera el mismo contenido de DISPLAY
      */
-    resultado = DISPLAY.innerHTML
+    let resultado = DISPLAY.innerHTML
     ANStext = resultado
     guardarHistorial(DISPLAY.innerHTML,resultado)
-    DISPLAY.innerHTML = resultado
+    posicion = resultado.length
+    // DISPLAY.innerHTML = resultado
     console.log("    "+DISPLAY.innerHTML.search("ANS") != -1);
     
 }
