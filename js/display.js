@@ -1,4 +1,4 @@
-// import { botonClick } from "./botones.js";
+import { operarContenido } from "./botones.js";
 
 const DISPLAY = document.getElementById("displayPrincipal")
 const CURSOR = `<div class="cursor"></div>`
@@ -7,7 +7,7 @@ const LEN_CURSOR = CURSOR.length
 
 let resultado = 0
 let posicion = 0
-let ANStext = 0
+let ANSvalor = 0
 function botonClick(caracter) {
     var elemento;
     var posi;
@@ -156,14 +156,13 @@ function eliminarElemeto() {
 }
 
 function invertirCadena(cadena){
-    x = ""
-    for( i=0; i<cadena.length ; i++){
+    let x = ""
+    for( let i=0; i<cadena.length ; i++){
         x = cadena.substring(i,i+1) + x
     }
     return x
 }
 
-`{[(1)]}`
 
 function mostrarResultado() {
     let contenido = contenidoDisplaySinCursor()
@@ -175,33 +174,46 @@ function mostrarResultado() {
     /*TODO: hay que agregar los casos de error aqui, para que ANS no guarde errores */
 
     if(contenido.search("ANS") != -1){
-        contenido = contenido.replaceAll("ANS",ANStext)
+        contenido = contenido.replaceAll("ANS",ANSvalor)
     }
 
     /**TODO: este deberia cambiar, debe operar para el resultado
      * De momento el resultado sera el mismo contenido de DISPLAY
      */
-    let resultado = contenido
-    ANStext = resultado
+    resultado = operarContenido(contenido)
+    ANSvalor = resultado
+    posicion = String(resultado).length
     guardarHistorial(contenido,resultado)
-    posicion = resultado.length
     // DISPLAY.innerHTML = resultado
-    DISPLAY.innerHTML = contenido + CURSOR
+    DISPLAY.innerHTML = resultado + CURSOR
 }
 
 function guardarHistorial(operaciones, respuesta) {
     const CONTENEDOR_HISTORIAL = document.getElementById("containerHistorial")
     CONTENEDOR_HISTORIAL.innerHTML = CONTENEDOR_HISTORIAL.innerHTML +
                 `<li>
-                    <div class="display">${operaciones}</div>
-                    <div class="display">${respuesta}</div>
+                    <button onclick="botonHistorial(${operaciones})">
+                        <div class="display">${operaciones}</div>
+                    </button>
+                    <button onclick="botonHistorial(${respuesta})">
+                        <div class="display">${respuesta}</div>
+                    </button>
                 </li>
                 `
     CONTENEDOR_HISTORIAL.scrollTop = CONTENEDOR_HISTORIAL.scrollHeight
     
 }
 
+function botonHistorial(texto) {
+    posicion = texto.length
+    DISPLAY.innerHTML = texto + CURSOR
+}
 
 function contenidoDisplaySinCursor(){
     return DISPLAY.innerHTML.replace(CURSOR,'')
 }
+
+/**primero dividire los botones que mantengan el resultado */
+
+window.botonClick = botonClick;/** temporal, talvez cambie a addEventListener */
+window.botonHistorial = botonHistorial;

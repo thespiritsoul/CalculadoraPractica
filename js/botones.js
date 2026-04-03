@@ -1,5 +1,14 @@
 // const DISPLAY = document.getElementById("displayPrincipal")
 
+export function operarContenido(contenedor) {
+    if(contenedor == ""){
+        return 0
+    }
+
+    return 1
+}
+
+
 // export function botonClick(caracter) {
 //     var mostrarCaracter;
 //     accion
