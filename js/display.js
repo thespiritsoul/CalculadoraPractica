@@ -1,4 +1,5 @@
-import { operarContenido } from "./botones.js";
+// import { operarContenido } from "./botones.js";
+import {calculate} from "./logica/index.js"
 
 const DISPLAY = document.getElementById("displayPrincipal")
 const CURSOR = `<div class="cursor"></div>`
@@ -8,9 +9,15 @@ const LEN_CURSOR = CURSOR.length
 let resultado = 0
 let posicion = 0
 let ANSvalor = 0
+let estadoError = false
 function botonClick(caracter) {
     var elemento;
     var posi;
+    if(estadoError){
+        DISPLAY.innerHTML = CURSOR
+        posicion = 0
+        estadoError = false
+    }
     switch (caracter) {
         case '1':       
         case '2':       
@@ -27,7 +34,8 @@ function botonClick(caracter) {
         case '+':       
         case '-':       
         case '*':       
-        case '/':       
+        case '/': 
+        case '%':      
         case '.':       
             elemento = caracter
             posi = 1
@@ -45,7 +53,7 @@ function botonClick(caracter) {
             posi = 1
             break;
         case 'cua':
-            elemento = '&#178;&radic;'
+            elemento = '2&radic;'
             posi = 2
             break;
         case 'sqrt':
@@ -99,8 +107,6 @@ function moverCursor(dire) {
         }
         if( izq.search("SNA") == 0){
             nuevaPosi = 3
-        }else if(izq.search("√²") == 0){
-            nuevaPosi = 2
         }else{
             nuevaPosi = 1
         }
@@ -112,8 +118,6 @@ function moverCursor(dire) {
         }
         if( der.search("ANS") == 0){
             nuevaPosi = 3
-        }else if(der.search("²√") == 0){
-            nuevaPosi = 2
         }else{
             nuevaPosi = 1
         }
@@ -144,9 +148,6 @@ function eliminarElemeto() {
     if( operando.search("SNA") == 0){ 
         operando = operando.replace('SNA',"")
         posicion -= 3
-    }else if(operando.search("√²") == 0){
-        operando = operando.replace('√²',"")
-        posicion -= 2
     }else{
         operando = operando.substring(1,n)
         posicion -= 1
@@ -169,42 +170,56 @@ function mostrarResultado() {
     let n = contenido.length
     if (contenido == "") {
         return
-    }
-
-    /*TODO: hay que agregar los casos de error aqui, para que ANS no guarde errores */
-
+    }  
     if(contenido.search("ANS") != -1){
         contenido = contenido.replaceAll("ANS",ANSvalor)
     }
 
-    /**TODO: este deberia cambiar, debe operar para el resultado
-     * De momento el resultado sera el mismo contenido de DISPLAY
+    /** en logica/index.js
+     * esta toda la logica del ChatGPT, logica muy dificil
+     * me llevaria años entenderlo jaja
      */
-    resultado = operarContenido(contenido)
+    resultado = calculate(contenido)
+
+    if(resultado == "error de formato" || resultado == "Big number"){
+        DISPLAY.innerHTML = resultado
+        posicion = 0
+        ANSvalor = 0
+        guardarHistorial(contenido,String(resultado))
+        estadoError = true
+        return
+    }
     ANSvalor = resultado
     posicion = String(resultado).length
     guardarHistorial(contenido,resultado)
-    // DISPLAY.innerHTML = resultado
     DISPLAY.innerHTML = resultado + CURSOR
 }
 
 function guardarHistorial(operaciones, respuesta) {
     const CONTENEDOR_HISTORIAL = document.getElementById("containerHistorial")
-    CONTENEDOR_HISTORIAL.innerHTML = CONTENEDOR_HISTORIAL.innerHTML +
-                `<li>
-                    <button onclick="botonHistorial(${operaciones})">
+
+    /** enviar con '', para que el texto '1+2+3' no me lo opere */
+    let operacion =`<button onclick="botonHistorial('${operaciones}')">
                         <div class="display">${operaciones}</div>
-                    </button>
-                    <button onclick="botonHistorial(${respuesta})">
-                        <div class="display">${respuesta}</div>
-                    </button>
-                </li>
-                `
+                    </button>`
+    let res;
+    if (respuesta == "error de formato" || respuesta == "Big number") {
+        res = `<div class="display">${respuesta}</div>`
+    }else{
+        res =  `<button onclick="botonHistorial('${respuesta}')">
+                    <div class="display">${respuesta}</div>
+                </button>`
+    }
+
+    CONTENEDOR_HISTORIAL.innerHTML = CONTENEDOR_HISTORIAL.innerHTML +`<li>${operacion}${res}</li>`
     CONTENEDOR_HISTORIAL.scrollTop = CONTENEDOR_HISTORIAL.scrollHeight
     
 }
 
 function botonHistorial(texto) {
+    if(estadoError){
+        estadoError = false
+    }
     posicion = texto.length
     DISPLAY.innerHTML = texto + CURSOR
 }
