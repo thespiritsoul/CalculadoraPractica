@@ -32,3 +32,14 @@
 .igual{
     grid-column: 4/6;
 }
+
+li button{
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+}
+
+li button:hover .display{
+    cursor: pointer;
+    background-color: rgb(212, 110, 255);
+}
